@@ -13,7 +13,7 @@ namespace DequeueEvent
     public static class Function1
     {
         [FunctionName("Function1")]
-        public static async Task Run([EventHubTrigger("yyyy", Connection = "EventHubConnectionAppSetting")] EventData[] events, ILogger log, PartitionContext partitionContext)
+        public static async Task Run([EventHubTrigger("evtqueue", Connection = "EventHubConnectionAppSetting")] EventData[] events, ILogger log, PartitionContext partitionContext)
         {
             var exceptions = new List<Exception>();
 
@@ -22,11 +22,13 @@ namespace DequeueEvent
                 try
                 {
                     string partitionId = partitionContext.PartitionId;
+                    string partitionKey = eventData.PartitionKey;
                     string messageBody = Encoding.UTF8.GetString(eventData.EventBody);
 
                     // Replace these two lines with your processing logic.
                     log.LogInformation($"C# Event Hub trigger function processed a message: {messageBody}");
                     log.LogInformation($"Event Hub partition: {partitionId}");
+                    log.LogInformation($"Partition context: {partitionKey}");
 
                     await Task.Yield();
                 }
